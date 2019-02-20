@@ -41,7 +41,7 @@ FROM
 
 
 SELECT
-    t1.header.serialNumber as serialNumber,t1.header.make as make,t1.header.messageTimestamp as MessageTime,'Device Offline Alert' as alertType
+    t1.*,'Device Offline Alert' as alertType
 INTO
     [alertOutput2]
 FROM
@@ -50,6 +50,6 @@ FROM
 ON
     t1.header.serialNumber=t2.header.serialNumber AND t1.header.make=t2.header.make
     AND DATEDIFF(minute, t1, t2) BETWEEN 1 and 5
-WHERE t2.serialNumber IS NULL
+WHERE t2.header IS NULL
 `
 
