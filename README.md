@@ -37,19 +37,15 @@ SELECT
 INTO
     [alertOutput]
 FROM
-    [tsfInput] TIMESTAMP BY header.messageTimestamp
+    [tsfInput] 
     WHERE ISFIRST(mi, 5) OVER (PARTITION BY header.serialNumber,header.make) = 1
 
-
-SELECT
-    t1.*,'Device Offline Alert' as alertType
-INTO
-    [alertOutput2]
-FROM
-    [tsfInput] t1 TIMESTAMP BY header.messageTimestamp
-    LEFT OUTER JOIN [tsfInput] t2 TIMESTAMP BY header.messageTimestamp
-ON
-    t1.header.serialNumber=t2.header.serialNumber AND t1.header.make=t2.header.make
-    AND DATEDIFF(minute, t1, t2) BETWEEN 1 and 5
+SELECT t1.*,'Device Offline Alert' as alertType 
+INTO 
+     [alertOutput2] 
+FROM [tsfInput] t1 
+     LEFT OUTER JOIN [tsfInput] t2 
+ON t1.header.serialNumber=t2.header.serialNumber AND t1.header.make=t2.header.make 
+AND DATEDIFF(minute, t1, t2) BETWEEN 1 and 5 
 WHERE t2.header IS NULL
 `
