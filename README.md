@@ -30,6 +30,7 @@ where ISFIRST(mi, 2) OVER (PARTITION BY PlantId) = 1
 `
 
 ## 2. Device Status Reporting (Online/Offline)
+
 `
 SELECT
     *,'Device Online Alert' as alertType
@@ -52,4 +53,3 @@ ON
     AND DATEDIFF(minute, t1, t2) BETWEEN 1 and 5
 WHERE t2.header IS NULL
 `
-
