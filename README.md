@@ -29,7 +29,7 @@ FROM
 where ISFIRST(mi, 2) OVER (PARTITION BY PlantId) = 1
 `
 
-## 2. Device Status Reporting (Online/Offline)
+## 3. Device Status Reporting (Online/Offline)
 
 `
 SELECT
@@ -48,4 +48,33 @@ FROM [tsfInput] t1
 ON t1.header.serialNumber=t2.header.serialNumber AND t1.header.make=t2.header.make 
 AND DATEDIFF(minute, t1, t2) BETWEEN 1 and 5 
 WHERE t2.header IS NULL
+`
+
+## 4. Milestone
+
+# Reference Data
+
+`
+{
+	"typeName": "MILESTONE",
+	"serialNumber": "HPE641991",
+	"description": "Milestone Rule",
+	"milestoneRule": {
+		"parameterToAsses": "TotalHours",
+		"parameterValue": 300,
+		"operation": "GREATER_THAN"
+	}
+}
+`
+
+`
+SELECT
+     t1.*,'Milestone Alert' as alertType
+INTO
+     [Output]
+FROM
+     [tsfInput] t1
+     INNER JOIN [ruleInput] r1
+ON t1.header.serialNumber = r1.serialNumber
+AND t1.masterHourMeter.serviceMeterReading > r1.milestoneRule.parameterValue
 `
